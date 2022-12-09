@@ -29,7 +29,7 @@ int main()
 {
 
     int part1Score = 0, part2Score = 0;
-    ifstream InputFile("week2.txt");
+    ifstream InputFile("day2.txt");
 
     for (string round; getline(InputFile, round);)
     {

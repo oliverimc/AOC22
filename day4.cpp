@@ -8,7 +8,7 @@ using namespace std;
 
 int main()
 {
-    ifstream InputFile("week4.txt");
+    ifstream InputFile("day4.txt");
     int encloses = 0, overlaps = 0;
     for (string pair; getline(InputFile, pair);)
     {

@@ -1,6 +1,7 @@
 #include <fstream>
 #include <iostream>
 #include <vector>
+#include <algorithm>
 
 #define print(x) std::cout << x << std::endl
 
@@ -50,10 +51,7 @@ int part1(vector<vector<int>> matrix)
         {
             LRDir[r][c] = matrix[r][c] > maxSeen;
 
-            if (matrix[r][c] > maxSeen)
-            {
-                maxSeen = matrix[r][c];
-            }
+            maxSeen = max(matrix[r][c], maxSeen);
         }
     }
 
@@ -68,10 +66,7 @@ int part1(vector<vector<int>> matrix)
 
             RLDir[r][c] = matrix[r][c] > maxSeen;
 
-            if (matrix[r][c] > maxSeen)
-            {
-                maxSeen = matrix[r][c];
-            }
+            maxSeen = max(matrix[r][c], maxSeen);
         }
     }
 
@@ -84,10 +79,7 @@ int part1(vector<vector<int>> matrix)
         {
             TBDir[r][c] = matrix[r][c] > maxSeen;
 
-            if (matrix[r][c] > maxSeen)
-            {
-                maxSeen = matrix[r][c];
-            }
+            maxSeen = max(matrix[r][c], maxSeen);
         }
     }
 
@@ -100,10 +92,7 @@ int part1(vector<vector<int>> matrix)
         {
             BTDir[r][c] = matrix[r][c] > maxSeen;
 
-            if (matrix[r][c] > maxSeen)
-            {
-                maxSeen = matrix[r][c];
-            }
+            maxSeen = max(matrix[r][c], maxSeen);
         }
     }
 
@@ -174,13 +163,8 @@ int part2(vector<vector<int>> matrix)
     {
         for (int c = 0; c < matrix[0].size(); c++)
         {
-            int newNeighbours = neighbours(matrix, r, c);
 
-            if (maxNeighbours < newNeighbours)
-            {
-
-                maxNeighbours = newNeighbours;
-            }
+            maxNeighbours = max(neighbours(matrix, r, c), maxNeighbours);
         }
     }
 
@@ -190,7 +174,7 @@ int part2(vector<vector<int>> matrix)
 int main()
 {
 
-    ifstream InputFile("Week8.txt");
+    ifstream InputFile("day8.txt");
     vector<string> input;
     for (string line; getline(InputFile, line);)
     {

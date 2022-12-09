@@ -88,6 +88,6 @@ int simulateNRope(string inputFile, int n)
 
 int main()
 {
-    print(simulateNRope("Week9.txt", 2));
-    print(simulateNRope("Week9.txt", 10));
+    print(simulateNRope("day9.txt", 2));
+    print(simulateNRope("day9.txt", 10));
 }

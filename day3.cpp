@@ -9,7 +9,7 @@ using namespace std;
 
 int main()
 {
-    ifstream InputFile("week3.txt");
+    ifstream InputFile("day3.txt");
     int itemPriority = 0, badgePriority = 0, count = 0;
     set<char> group[3];
 

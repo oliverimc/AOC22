@@ -8,7 +8,7 @@ using namespace std;
 
 int main()
 {
-    ifstream InputFile("week6.txt");
+    ifstream InputFile("day6.txt");
     string signal;
     getline(InputFile, signal);
 

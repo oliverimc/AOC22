@@ -9,7 +9,7 @@ using namespace std;
 
 int main()
 {
-    ifstream InputFile("week1.txt");
+    ifstream InputFile("day1.txt");
 
     int groupSum = 0;
     vector<int> elfAmounts;

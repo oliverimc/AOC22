@@ -15,7 +15,7 @@ array<deque<char>, numberOfStacks> stacks;
 
 int main()
 {
-    ifstream InputFile("week5.txt");
+    ifstream InputFile("day5.txt");
 
     bool readingStacks = true;
 

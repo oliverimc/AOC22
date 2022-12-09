@@ -52,7 +52,7 @@ int evalDir(Directory dir, int &smallDirTotal, int &currentRemoveDir)
 int main()
 {
 
-    ifstream InputFile("week7.txt");
+    ifstream InputFile("day7.txt");
 
     Directory *root = new Directory(NULL);
     Directory *current = root;
