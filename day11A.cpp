@@ -112,7 +112,6 @@ int main()
 
     for (int round = 0; round < 20; round++)
     {
-        int monkeyCounter = 0;
 
         for (auto &monkey : monkeys)
         {
@@ -128,7 +127,6 @@ int main()
             }
 
             monkey.items.clear();
-            monkeyCounter++;
         }
     }
 
