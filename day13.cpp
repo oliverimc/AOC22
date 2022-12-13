@@ -10,6 +10,9 @@ using namespace std;
 class Node
 {
 public:
+    Node()
+    {
+    }
     Node(int _value)
     {
         value = _value;
@@ -22,12 +25,87 @@ public:
         values = parseNodes(_values);
     }
 
-    bool isList = true; // Default such that an empty list is left as a list type
+    bool isList = true;
     int value;
     vector<Node> values;
-    Node makeList()
+
+    bool operator==(const Node &rhs) const
     {
-        return Node("[" + to_string(value) + "]");
+        if (isList == rhs.isList)
+        {
+            if (isList)
+            {
+                return values == rhs.values;
+            }
+            else
+            {
+                return value == rhs.value;
+            }
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    bool operator<(const Node &other) const
+    {
+
+        if (!isList && !other.isList)
+        {
+
+            return value < other.value;
+        }
+
+        else if (isList && other.isList)
+        {
+            for (int n = 0; n < values.size(); n++)
+            {
+                if (n == other.values.size())
+                {
+
+                    return false;
+                }
+                else if (values[n] < other.values[n])
+                {
+
+                    return true;
+                }
+                else if (other.values[n] < values[n])
+                {
+                    return false;
+                }
+            }
+
+            return values.size() != other.values.size();
+        }
+
+        else
+        {
+            Node thisList, otherList;
+
+            if (this->isList)
+            {
+                thisList = *this;
+            }
+            else
+            {
+                thisList.isList = true;
+                thisList.values = {Node(value)};
+            }
+
+            if (other.isList)
+            {
+                otherList = other;
+            }
+            else
+            {
+                otherList.isList = true;
+                otherList.values = {Node(other.value)};
+            }
+
+            return thisList < otherList;
+        }
     }
 
     string toString() const
@@ -39,7 +117,7 @@ public:
             {
                 nodeString += val.toString() + ",";
             }
-            // If there are no values don't remove the last value (since there is no extra comma)
+
             return (nodeString.size() > 1 ? nodeString.substr(0, nodeString.size() - 1) : nodeString) + "]";
         }
         else
@@ -80,11 +158,10 @@ private:
             }
             else
             {
-                // Do nothing
             }
         }
 
-        return -1; // Should never return, indicates error
+        return -1;
     }
     vector<Node> parseNodes(string values)
     {
@@ -98,7 +175,7 @@ private:
 
             if (dataString[i] == '[')
             {
-                int endInteger = indexOfClosingBracket(dataString.substr(i + 1, dataString.size())) + i + 1; // +1 to account for shift
+                int endInteger = indexOfClosingBracket(dataString.substr(i + 1, dataString.size())) + i + 1;
                 parsedList.push_back(Node(dataString.substr(i, endInteger - i + 1)));
                 i = endInteger + 1;
             }
@@ -119,64 +196,6 @@ private:
         return parsedList;
     }
 };
-
-int isCorrect(Node smaller, Node larger)
-{
-    // 1 = Yes, 0 = No, -1 = Unknown keep checking
-
-    if (!smaller.isList && !larger.isList)
-    {
-        if (smaller.value < larger.value)
-        {
-            return 1;
-        }
-
-        else if (smaller.value > larger.value)
-        {
-            return 0;
-        }
-        else
-        {
-            return -1;
-        }
-    }
-
-    else if (smaller.isList && larger.isList)
-    {
-        for (int n = 0; n < smaller.values.size(); n++)
-        {
-            if (n == larger.values.size())
-            {
-                return false;
-            }
-            int correctValue = isCorrect(smaller.values[n], larger.values[n]);
-
-            switch (correctValue)
-            {
-            case 1:
-                return 1;
-                break;
-            case 0:
-                return 0;
-                break;
-            case -1:
-                // pass
-                break;
-            default:
-                throw runtime_error("Unreachable code, issue found.");
-                break;
-            }
-        }
-        return smaller.values.size() == larger.values.size() ? -1 : 1;
-    }
-
-    else
-    {
-        Node listSmaller = smaller.isList ? smaller : smaller.makeList();
-        Node listLarger = larger.isList ? larger : larger.makeList();
-        return isCorrect(listSmaller, listLarger);
-    }
-}
 
 int main()
 {
@@ -201,12 +220,10 @@ int main()
         nodes.push_back(first);
         nodes.push_back(second);
 
-        // Top level nodes should always be lists, otherwise indicates parsing error
-        assert(first.isList);
-        assert(second.isList);
-
-        indSum += isCorrect(first, second) ? (i / 3 + 1) : 0;
+        indSum += first < second ? (i / 3 + 1) : 0;
     }
+
+    print(indSum);
 
     Node twoKey = Node("[[2]]");
     Node sixKey = Node("[[6]]");
@@ -214,29 +231,10 @@ int main()
     nodes.push_back(twoKey);
     nodes.push_back(sixKey);
 
-    print(indSum);
-    sort(nodes.begin(), nodes.end(), [](const Node &node1, const Node &node2)
-         { return isCorrect(node1, node2) == 1 ? true : false; });
+    sort(nodes.begin(), nodes.end());
 
-    int ind6, ind2;
-    for (int i = 0; i < nodes.size(); i++)
-    {
-        if (nodes[i].values.size() == 1)
-        {
-            if (nodes[i].values[0].values.size() == 1)
-            {
-                if (nodes[i].values[0].values[0].value == 2)
-                {
-                    ind2 = i + 1;
-                }
-                else if (nodes[i].values[0].values[0].value == 6)
-                {
-                    ind6 = i + 1;
-                }
-                 
-            }
-        }
-    }
+    int ind2 = distance(nodes.begin(), find(nodes.begin(), nodes.end(), twoKey)) + 1;
+    int ind6 = distance(nodes.begin(), find(nodes.begin(), nodes.end(), sixKey)) + 1;
 
     print(ind2 * ind6);
 }
