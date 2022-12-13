@@ -148,7 +148,6 @@ private:
             {
                 if (openersEncountered == 0)
                 {
-
                     return i;
                 }
                 else
@@ -156,12 +155,9 @@ private:
                     openersEncountered--;
                 }
             }
-            else
-            {
-            }
         }
 
-        return -1;
+        return -1; // Indicates there is no "]"" present
     }
     vector<Node> parseNodes(string values)
     {
