@@ -10,9 +10,7 @@ using namespace std;
 class Node
 {
 public:
-    Node()
-    {
-    }
+    Node() {}
     Node(int _value)
     {
         value = _value;
@@ -53,7 +51,6 @@ public:
 
         if (!isList && !other.isList)
         {
-
             return value < other.value;
         }
 
@@ -63,12 +60,10 @@ public:
             {
                 if (n == other.values.size())
                 {
-
                     return false;
                 }
                 else if (values[n] < other.values[n])
                 {
-
                     return true;
                 }
                 else if (other.values[n] < values[n])
