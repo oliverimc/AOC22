@@ -2,8 +2,8 @@
 #include <fstream>
 #include <iostream>
 #include <vector>
-#include <map>
 #include <set>
+#include <numeric>
 #include <regex>
 
 #define print(x) std::cout << x << std::endl
@@ -28,33 +28,22 @@ void printPair(pair<int, int> _pair)
 void combineRanges(vector<pair<int, int>> &ranges)
 {
     sort(ranges.begin(), ranges.end());
-
-    int toRemove = -1;
     for (int i = 1; i < ranges.size(); i++)
     {
-        if (ranges[i - 1].second >= ranges[i].first || (ranges[i].first - ranges[i - 1].second) == 1)
+        if ((ranges[i].first - ranges[i - 1].second) < 2)
         {
-            toRemove = i;
             ranges[i - 1].second = max(ranges[i].second, ranges[i - 1].second);
-
+            ranges.erase(ranges.begin() + i);
+            combineRanges(ranges);
             break;
         }
-    }
-    if (toRemove != -1)
-    {
-        ranges.erase(ranges.begin() + toRemove);
-        combineRanges(ranges);
     }
 }
 
 int rangesToCount(vector<pair<int, int>> ranges)
 {
-    int total = 0;
-    for (auto [beg, end] : ranges)
-    {
-        total += end - beg + 1;
-    }
-    return total;
+    return reduce(ranges.begin(), ranges.end(), 0, [](auto current, auto nextRange)
+                  { return current + nextRange.second - nextRange.first + 1; });
 }
 
 vector<pair<int, int>> getRowRanges(vector<pair<pair<int, int>, pair<int, int>>> _sensorBeaconPairs, set<pair<int, int>> beacons, int rowVal)
@@ -62,7 +51,6 @@ vector<pair<int, int>> getRowRanges(vector<pair<pair<int, int>, pair<int, int>>>
     vector<pair<int, int>> ranges;
     for (auto [sensor, beacon] : _sensorBeaconPairs)
     {
-
         int distance = abs(sensor.first - beacon.first) + abs(sensor.second - beacon.second);
 
         if (abs(rowVal - sensor.second) <= distance)
@@ -70,11 +58,7 @@ vector<pair<int, int>> getRowRanges(vector<pair<pair<int, int>, pair<int, int>>>
             int rangeStart = sensor.first - (distance - abs(rowVal - sensor.second));
             int rangeEnd = sensor.first + (distance - abs(rowVal - sensor.second));
 
-            if (rangeStart == rangeEnd && beacons.count(make_pair(rangeStart, rowVal)) == 1)
-            {
-                // pass Don't add beacon posistion single value range
-            }
-            else
+            if (!(rangeStart == rangeEnd && beacons.count(make_pair(rangeStart, rowVal)) == 1)) // Check you are not adding a one value range that is a beacon pos
             {
                 rangeStart += (beacons.count(make_pair(rangeStart, rowVal)) == 1 ? 1 : 0);
                 rangeEnd -= (beacons.count(make_pair(rangeEnd, rowVal)) == 1 ? 1 : 0);
@@ -130,7 +114,6 @@ int main()
 
     for (int row = 0; row < maxVal; row++)
     {
-
         vector<pair<int, int>> ranges = getRowRanges(sensorBeaconPairs, beaconPositions, row);
         combineRanges(ranges);
 
